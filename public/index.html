@@ -27,6 +27,7 @@ en cualquier dispositivo: un portátil, un celular, una tablet.
   input, select { width: 100%; padding: 8px; border: 1px solid #C9DBF0; border-radius: 6px; box-sizing: border-box; }
   button { margin-top: 14px; background: #1F8A4C; color: white; border: none; padding: 10px 18px; border-radius: 6px; font-size: 1rem; cursor: pointer; }
   button.secundario { background: #0F4C9C; }
+  a.boton { display: inline-block; margin-top: 14px; background: #0F4C9C; color: white; padding: 10px 18px; border-radius: 6px; font-size: 1rem; text-decoration: none; }
   #mensaje { margin-top: 12px; padding: 10px; border-radius: 6px; display: none; font-size: .92rem; }
   #mensaje.ok { display: block; background: #EFF8F2; border: 1px solid #C4E2CF; color: #1F8A4C; }
   #mensaje.error { display: block; background: #FCF1EF; border: 1px solid #EFC9C2; color: #A93226; }
@@ -44,6 +45,8 @@ en cualquier dispositivo: un portátil, un celular, una tablet.
 </header>
 
 <main>
+  <a class="boton" href="/blog-semana-7.html">Ir al blog Semana 7</a>
+
   <section>
     <h2>Nueva cita</h2>
     <label for="paciente">Nombre del paciente</label>
@@ -154,8 +157,7 @@ if (respuesta.ok) {
     const s = await r.json();
     estado.textContent = "Servidor activo · respuesta recibida a las " +
       new Date(s.hora).toLocaleTimeString("es-CO");
-    await cargarProfesionales();
-    await cargarCitas();
+    await Promise.all([cargarProfesionales(), cargarCitas()]);
   } catch (e) {
     // Si el servidor está caído, el cliente no sirve para nada ("todo o nada").
     estado.textContent = "No hay conexión con el servidor. Sin él, este cliente no puede hacer nada.";

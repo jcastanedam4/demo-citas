@@ -7,12 +7,14 @@ const citasRoutes = require('./src/presentacion/citasRoutes');
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10kb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', citasRoutes);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const servidor = app.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);
   console.log(`Cliente web: http://localhost:${PORT}`);
 });
+servidor.keepAliveTimeout = 5000;
+servidor.headersTimeout = 6000;

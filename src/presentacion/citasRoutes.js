@@ -20,7 +20,9 @@ router.get('/salud', (req, res) => {
 
 router.get('/citas', async (req, res) => {
   try {
-    res.json(await citaService.consultarCitas());
+    const limite = Math.min(Math.max(Number.parseInt(req.query.limite, 10) || 100, 1), 100);
+    const desplazamiento = Math.max(Number.parseInt(req.query.desplazamiento, 10) || 0, 0);
+    res.json(await citaService.consultarCitas({ limite, desplazamiento }));
   } catch (error) {
     console.error('Error consultando citas:', error.message);
     res.status(500).json({ error: 'No se pudo consultar la base de datos' });

@@ -43,7 +43,7 @@ src/
 |---|---|---|
 | `if (!paciente || ...)` — datos obligatorios | `dominio/reglasDeAgenda.js` | Es una regla del negocio |
 | `if (new Date(fecha_hora) <= new Date())` — no citas en el pasado | `dominio/reglasDeAgenda.js` | Es una regla del negocio |
-| Consulta de choque de agenda + rechazo | Consulta: `persistencia/citaRepository.existeEnHorario` · Decisión: `dominio/validarAgendaLibre` | Averiguar es persistencia; decidir es dominio |
+| Consulta de choque de agenda + rechazo | `persistencia/citaRepository.guardar` intenta el `INSERT` · `aplicacion/citaService` traduce el duplicado | La base de datos garantiza la exclusión y la aplicación traduce el conflicto |
 | Todos los `pool.query(...)` (SQL) | `persistencia/*Repository.js` | Guardar y consultar es persistencia |
 | `new Pool({...})` (conexión) | `persistencia/db.js` | Detalle técnico, un solo lugar |
 | `res.status(400/409/500).json(...)` | `presentacion/citasRoutes.js` | Los códigos HTTP son asunto del protocolo, no del negocio |
@@ -91,7 +91,7 @@ Equivalente a la tabla de la Semana 7, para que cada semana deje una evidencia c
 | Infraestructura | PostgreSQL en Supabase (y la plataforma Render) — externa al código |
 | El contrato de cada capa | Los `module.exports` de cada archivo |
 
-**Nota honesta sobre concurrencia:** el refactor conserva la misma condición de carrera de la Semana 7 (verificar disponibilidad y luego insertar, en dos pasos). Es deliberado: las capas organizan responsabilidades, no resuelven concurrencia — la exclusión real se garantiza en el nivel de datos con un índice de unicidad, y ese es un ejercicio de la sesión.
+**Nota sobre concurrencia:** la reserva delega la exclusión al nivel de datos mediante un índice de unicidad sobre profesional y horario. La aplicación intenta directamente el `INSERT` y traduce el error de duplicado a `AGENDA_OCUPADA`, evitando la consulta previa de disponibilidad.
 
 ## Mapa a las diapositivas de la Semana 8
 

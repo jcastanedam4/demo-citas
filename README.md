@@ -93,7 +93,7 @@ En Render no hay que tocar nada: el mismo servicio redespliega este commit autom
 
 ## Nota sobre concurrencia
 
-El refactor conserva deliberadamente la condición de carrera de la Semana 7 (verificar disponibilidad y luego insertar, en dos pasos, sin restricción de unicidad). Las capas organizan responsabilidades; no resuelven concurrencia — la exclusión real se garantiza en el nivel de datos con un índice de unicidad, y ese es un ejercicio de la sesión de la Semana 8.
+La reserva garantiza la exclusión en el nivel de datos con un índice de unicidad sobre profesional y horario. El servicio intenta directamente el `INSERT` y traduce el error de duplicado a HTTP 409, evitando una consulta previa y reduciendo un viaje a Supabase.
 
 ## Ruta del curso
 

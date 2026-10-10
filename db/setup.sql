@@ -29,6 +29,12 @@ CREATE TABLE citas (
   creada_en       TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+CREATE UNIQUE INDEX uq_citas_profesional_horario
+  ON citas (profesional_id, fecha_hora);
+
+CREATE INDEX idx_citas_fecha_hora
+  ON citas (fecha_hora);
+
 -- Datos semilla: para que la demo no empiece vacía
 INSERT INTO profesionales (nombre, especialidad) VALUES
   ('Dra. Laura Pérez',  'Medicina general'),
